@@ -1,0 +1,68 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          melange-server
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: melange-server
+# Description:       Provides the melange networking service
+### END INIT INFO
+
+set -e
+
+PIDFILE=/var/run/melange/melange-server.pid
+LOGFILE=/var/log/melange/melange-server.log
+
+DAEMON=/usr/bin/melange-server
+DAEMON_ARGS="--log-file=$LOGFILE"
+DAEMON_DIR=/var/run
+
+ENABLED=true
+
+if test -f /etc/default/melange-server; then
+  . /etc/default/melange-server
+fi
+
+mkdir -p /var/run/melange
+mkdir -p /var/log/melange
+
+. /lib/lsb/init-functions
+
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+export TMPDIR=/var/lib/melange/tmp
+
+if [ ! -x ${DAEMON} ] ; then
+	exit 0
+fi
+
+case "$1" in
+  start)
+    test "$ENABLED" = "true" || exit 0
+    log_daemon_msg "Starting melange server" "melange-server"
+    start-stop-daemon -Sbmv --pidfile $PIDFILE --chdir $DAEMON_DIR --exec $DAEMON -- $DAEMON_ARGS
+    log_end_msg $?
+    ;;
+  stop)
+    test "$ENABLED" = "true" || exit 0
+    log_daemon_msg "Stopping melange server" "melange-server"
+    start-stop-daemon --stop --oknodo --pidfile ${PIDFILE}
+    log_end_msg $?
+    ;;
+  restart|force-reload)
+    test "$ENABLED" = "true" || exit 1
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  status)
+    test "$ENABLED" = "true" || exit 0
+    status_of_proc -p $PIDFILE $DAEMON melange-server && exit 0 || exit $?
+    ;;
+  *)
+    log_action_msg "Usage: /etc/init.d/melange-server {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

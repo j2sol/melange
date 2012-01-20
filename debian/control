@@ -1,0 +1,26 @@
+Source: melange
+Maintainer: Major Hayden <major.hayden@rackspace.com>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), debhelper (>= 7), python-support (>= 0.8.4)
+Standards-Version: 3.8.4
+
+Package: melange-server
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends},
+  python-sqlalchemy,
+  python-eventlet,
+  python-kombu,
+  python-routes,
+  python-webob,
+  python-mox,
+  python-pastedeploy,
+  python-paste,
+  python-httplib2,
+  python-openstack-common,
+  python-mysqldb,
+  python-netaddr,
+  python-lxml,
+  python-migrate,
+  python-melangeclient
+Description: Melange server executables and libraries

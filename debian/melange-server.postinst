@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ]
+then
+    addgroup --quiet --system melange >/dev/null
+    adduser --quiet --system --home /var/lib/melange --ingroup melange --no-create-home --shell /bin/bash melange
+
+    chown melange:melange -R /var/lib/melange /var/log/melange /etc/melange
+    chmod 0700 /etc/melange
+
+    update-python-modules --post-install
+
+fi
+
+#DEBHELPER#
