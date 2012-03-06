@@ -1,11 +1,12 @@
 #!/usr/bin/make -f
 export DH_VERBOSE=1
 
-# Prep a version string for the changelog entry
-export VERSION=`grep '^MELANGE_VERSION' melange/version.py | grep -Eo "'[0-9]+', '[0-9]+'" | sed -e "s/'//g" -e "s/, /./g"`
+# Get current commit hashes for master/development
+export MASTER_HEAD=`git log -1 --format=%h master`
+export DEVELOPMENT_HEAD=`git log -1 --format=%h development`
+export VERSION=`python setup.py -V | tail -n1`
 export GITREV=`git rev-list --all | wc -l`
-export SHORTHASH=`git log --pretty=format:'%h' -n 1`
-export CHANGELOGENTRY="$(VERSION)-0rs-$(GITREV)-$(SHORTHASH)"
+export CHANGELOGENTRY="$(VERSION)-0rs-$(GITREV)-$(MASTER_HEAD)"
 
 %:
 	dh $@ --with python2
@@ -20,7 +21,7 @@ automated-build:
 	cp -av debian/control debian/control.pristine
 
 	# Add the current git hash to the Description field of the package
-	sed -i "s/^Description: .*$$/& (git: $(CHANGELOGENTRY) `git rev-parse HEAD`)/" debian/control
+	sed -i "s/^Description: .*$$/& (master: $(MASTER_HEAD) development: $(DEVELOPMENT_HEAD))/" debian/control
 
 	# Update the changelog
 	dch -v $(CHANGELOGENTRY) "Automated build called via debian/rules automated-build."
@@ -29,7 +30,7 @@ automated-build:
 	dh clean
 
 	# Drop in the full git log as well as the last commit
-	git log | gzip -9vc > fullgitlog-melange-server.gz
+	git log --decorate=full --oneline | gzip -9vc > fullgitlog-melange-server.gz
 	git log -n 1 > lastcommit-melange-server.txt
 
 	# Build it

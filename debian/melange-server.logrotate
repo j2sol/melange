@@ -1,5 +1,6 @@
 /var/log/melange/melange-server.log {
     daily
     missingok
+    compress
 }
 
