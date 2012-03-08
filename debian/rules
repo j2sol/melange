@@ -1,12 +1,11 @@
 #!/usr/bin/make -f
-export DH_VERBOSE=1
 
-# Get current commit hashes for master/development
 export MASTER_HEAD=`git log -1 --format=%h master`
 export DEVELOPMENT_HEAD=`git log -1 --format=%h development`
+export TIMESTAMP=`date +%Y%m%d%H%M`
 export VERSION=`python setup.py -V | tail -n1`
 export GITREV=`git rev-list --all | wc -l`
-export CHANGELOGENTRY="$(VERSION)-0rs-$(GITREV)-$(MASTER_HEAD)"
+export CHANGELOGENTRY="$(VERSION)-$(TIMESTAMP)-$(GITREV)-$(MASTER_HEAD)"
 
 %:
 	dh $@ --with python2
