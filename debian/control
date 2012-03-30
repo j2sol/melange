@@ -22,5 +22,6 @@ Depends: ${python:Depends}, ${misc:Depends},
   python-netaddr,
   python-lxml,
   python-migrate,
-  python-melangeclient
+  python-melangeclient,
+  python-iso8601
 Description: Melange server executables and libraries
