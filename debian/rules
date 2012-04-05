@@ -2,10 +2,7 @@
 
 export MASTER_HEAD=`git log -1 --format=%h master`
 export DEVELOPMENT_HEAD=`git log -1 --format=%h development`
-export TIMESTAMP=`date +%Y%m%d%H%M`
-export VERSION=`python setup.py -V | tail -n1`
-export GITREV=`git rev-list --all | wc -l`
-export CHANGELOGENTRY="$(VERSION)-$(TIMESTAMP)-$(GITREV)-$(MASTER_HEAD)"
+export CHANGELOGENTRY="$(VERSION_STRING)"
 
 %:
 	dh $@ --with python2
