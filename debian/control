@@ -7,6 +7,7 @@ Standards-Version: 3.8.4
 
 Package: melange-server
 Architecture: all
+Section: python
 Depends: ${python:Depends}, ${misc:Depends},
   python-sqlalchemy,
   python-eventlet,
