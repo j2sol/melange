@@ -38,6 +38,7 @@ if os.path.exists(os.path.join(possible_topdir, 'melange', '__init__.py')):
 from melange import mac
 from melange import version
 from melange.common import config
+from melange.common import eventlet_backdoor
 from melange.common import wsgi
 from melange.db import db_api
 
@@ -68,6 +69,7 @@ if __name__ == '__main__':
         server = wsgi.Server()
         server.start(app, options.get('port', conf['bind_port']),
                      conf['bind_host'])
+        eventlet_backdoor.initialize_if_enabled(conf)
         server.wait()
     except RuntimeError as error:
         sys.exit("ERROR: %s" % error)
