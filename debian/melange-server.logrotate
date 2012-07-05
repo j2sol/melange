@@ -2,5 +2,6 @@
     daily
     missingok
     compress
+    copytruncate
 }
 
