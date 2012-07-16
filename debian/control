@@ -9,7 +9,7 @@ Package: melange-server
 Architecture: all
 Section: python
 Depends: ${python:Depends}, ${misc:Depends},
-  python-sqlalchemy,
+  python-sqlalchemy-ext (>= 0.7.2) | python-sqlalchemy (>= 0.7.2),
   python-eventlet,
   python-kombu,
   python-routes,
