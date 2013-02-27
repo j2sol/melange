@@ -17,6 +17,7 @@
 
 import logging
 import socket
+import traceback
 
 from melange.common import config
 from melange.common import exception
@@ -69,11 +70,17 @@ class LoggingNotifier(Notifier):
 
 class QueueNotifier(Notifier):
 
+    logger = logging.getLogger('melange.notifier.logging_notifier')
+
     def notify(self, level, msg):
         topic = "%s.%s" % ("melange_notifications", level.lower())
 
-        with messaging.Queue(topic, "notifier") as queue:
-            queue.put(msg)
+        try:
+            with messaging.Queue(topic, "notifier") as queue:
+                queue.put(msg)
+        except Exception:
+            self.logger.error("Error during queue notification!")
+            self.logger.error(traceback.format_exc())
 
 
 def notifier():
